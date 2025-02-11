@@ -56,5 +56,5 @@ def sent_detector():
 # Run the Flask application
 # The app runs on host "0.0.0.0" and port 5000, with debug mode enabled for development.
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
-}
+    app.run(host="0.0.0.0", port=5000, debug=True)  # Ensure no extra text here!
+
