@@ -23,8 +23,12 @@ def sent_detector():
 
     response = emotion_detector(text_to_detect)
 
-    # Check for None dominant emotion and 400 status code
-    if response["status_code"] == 400 or response["dominant_emotion"] is None:
+    # Ensure the response contains the necessary keys and handle errors accordingly
+    if "dominant_emotion" not in response or response["dominant_emotion"] is None:
+        return jsonify({"error": "Invalid text! Please try again."}), 400
+
+    # Check for a valid status code
+    if response.get("status_code") == 400:
         return jsonify({"error": "Invalid text! Please try again."}), 400
 
     # Format and return the response
