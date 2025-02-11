@@ -5,7 +5,7 @@ This module provides a Flask-based API that detects emotions in user-provided te
 """
 
 from flask import Flask, render_template, request, jsonify
-from final_project.emotion_detection import emotion_detector
+from emotion_detection import emotion_detector
 
 
 app = Flask("Final Project")
