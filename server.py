@@ -3,6 +3,13 @@ from emotion_detection import emotion_detector  # Corrected import
 
 app = Flask("Final Project")
 
+@app.route("/")
+def render_index_page():
+    """
+    Render the main application page.
+    """
+    return render_template('index.html')
+
 @app.route("/emotionDetector", methods=['GET'])
 def sent_detector():
     """
