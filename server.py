@@ -5,8 +5,7 @@ This module provides a Flask-based API that detects emotions in user-provided te
 """
 
 from flask import Flask, render_template, request, jsonify
-from emotion_detection import emotion_detector
-
+from emotion_detection import emotion_detector  # Ensure correct import path
 
 app = Flask("Final Project")
 
@@ -36,12 +35,30 @@ def sent_detector():
 
     # Handle blank input case
     if not text_to_detect or text_to_detect.strip() == "":
-        return jsonify({"error": "Invalid text! Please provide a valid statement."}), 400
+        return jsonify({
+            "anger": None,
+            "disgust": None,
+            "fear": None,
+            "joy": None,
+            "sadness": None,
+            "dominant_emotion": None
+        }), 400
 
     response = emotion_detector(text_to_detect)
 
-    # Check for None dominant emotion and 400 status code
-    if response.get("status_code") == 400 or response.get("dominant_emotion") is None:
+    # If status_code = 400, return None for all values
+    if response.get("status_code") == 400:
+        return jsonify({
+            "anger": None,
+            "disgust": None,
+            "fear": None,
+            "joy": None,
+            "sadness": None,
+            "dominant_emotion": None
+        }), 400
+
+    # If dominant_emotion is None, return an error message
+    if response.get("dominant_emotion") is None:
         return jsonify({"error": "Invalid text! Please try again."}), 400
 
     # Format and return the response
@@ -54,8 +71,11 @@ def sent_detector():
         "dominant_emotion": response.get("dominant_emotion"),
     })
 
-# Run the Flask application
-# The app runs on host "0.0.0.0" and port 5000, with debug mode enabled for development.
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)  # Ensure no extra text here!
+    """
+    Run the Flask application.
 
+    The app runs on host '0.0.0.0' and port 5000, with debug mode enabled 
+    for development purposes.
+    """
+    app.run(host="0.0.0.0", port=5000, debug=True)  # Ensure no extra text here!
