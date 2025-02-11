@@ -3,7 +3,7 @@ from emotion_detection import emotion_detector  # Corrected import
 
 app = Flask("Final Project")
 
-@app.route("/emotionDetector")
+@app.route("/emotionDetector", methods=['GET'])
 def sent_detector():
     """
     Analyze the user-provided text for emotions and return the result.
@@ -11,7 +11,7 @@ def sent_detector():
     text_to_detect = request.args.get('textToAnalyze')
 
     # Handle blank input case
-    if not text_to_detect:
+    if not text_to_detect or text_to_detect.strip() == "":
         return jsonify({"error": "Invalid text! Please provide a valid statement."}), 400
 
     response = emotion_detector(text_to_detect)
@@ -20,21 +20,16 @@ def sent_detector():
     if response["dominant_emotion"] is None:
         return jsonify({"error": "Invalid text! Please try again."}), 400
 
-    formatted_response = (
-        f"For the input statement, the system response is 'anger': {response['anger']}, "
-        f"'disgust': {response['disgust']}, 'fear': {response['fear']}, "
-        f"'joy': {response['joy']} and 'sadness': {response['sadness']}. "
-        f"The dominant emotion is {response['dominant_emotion']}."
-    )
+    formatted_response = {
+        "anger": response['anger'],
+        "disgust": response['disgust'],
+        "fear": response['fear'],
+        "joy": response['joy'],
+        "sadness": response['sadness'],
+        "dominant_emotion": response['dominant_emotion']
+    }
 
-    return formatted_response
+    return jsonify(formatted_response)
 
-@app.route("/")
-def render_index_page():
-    """
-    Render the main application page.
-    """
-    return render_template('index.html')
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)  # Runs Flask server
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)
