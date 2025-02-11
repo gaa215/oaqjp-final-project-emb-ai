@@ -28,16 +28,16 @@ def emotion_detector(text_to_analyze):
             dominant_emotion = max(emotion_scores, key=emotion_scores.get)
 
             return {
-                'anger': emotion_scores['anger'],
-                'disgust': emotion_scores['disgust'],
-                'fear': emotion_scores['fear'],
-                'joy': emotion_scores['joy'],
-                'sadness': emotion_scores['sadness'],
+                'anger': emotion_scores.get('anger'),
+                'disgust': emotion_scores.get('disgust'),
+                'fear': emotion_scores.get('fear'),
+                'joy': emotion_scores.get('joy'),
+                'sadness': emotion_scores.get('sadness'),
                 'dominant_emotion': dominant_emotion,
-                'status_code': 200
+                'status_code': response.status_code
             }
-
-        else:  # Handle cases where the API returns a bad request
+        else:
+            # Handle unexpected status codes
             return {
                 'anger': None,
                 'disgust': None,
@@ -45,11 +45,10 @@ def emotion_detector(text_to_analyze):
                 'joy': None,
                 'sadness': None,
                 'dominant_emotion': None,
-                'status_code': 400
+                'status_code': response.status_code
             }
-
-    except requests.exceptions.RequestException as e:
-        print(f"Error connecting to API: {e}")
+    except Exception as e:
+        # Handle exceptions such as network errors
         return {
             'anger': None,
             'disgust': None,
@@ -58,4 +57,4 @@ def emotion_detector(text_to_analyze):
             'sadness': None,
             'dominant_emotion': None,
             'status_code': 500  # Internal server error
-        }
+         }
