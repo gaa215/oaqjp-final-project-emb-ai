@@ -20,6 +20,7 @@ def sent_detector():
     if response["dominant_emotion"] is None:
         return jsonify({"error": "Invalid text! Please try again."}), 400
 
+    # Format and return the response
     formatted_response = {
         "anger": response['anger'],
         "disgust": response['disgust'],
@@ -32,4 +33,4 @@ def sent_detector():
     return jsonify(formatted_response)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)  # Runs Flask server
