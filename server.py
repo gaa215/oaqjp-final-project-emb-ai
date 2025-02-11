@@ -10,13 +10,15 @@ def sent_detector():
     """
     text_to_detect = request.args.get('textToAnalyze')
 
+    # Handle blank input case
     if not text_to_detect:
-        return "Invalid text! Please provide a valid statement.", 400
+        return jsonify({"error": "Invalid text! Please provide a valid statement."}), 400
 
     response = emotion_detector(text_to_detect)
 
+    # Check for None dominant emotion
     if response["dominant_emotion"] is None:
-        return "Invalid text! Please try again."
+        return jsonify({"error": "Invalid text! Please try again."}), 400
 
     formatted_response = (
         f"For the input statement, the system response is 'anger': {response['anger']}, "
