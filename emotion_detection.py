@@ -21,7 +21,20 @@ def emotion_detector(text_to_analyze):
 
     try:
         response = requests.post(URL, json=data, headers=headers)
-        response_data = json.loads(response.text)
+        response.raise_for_status()  # Raises exception for non-200 status codes
+
+        try:
+            response_data = response.json()  # Try parsing the response as JSON
+        except ValueError:
+            return {
+                'anger': None,
+                'disgust': None,
+                'fear': None,
+                'joy': None,
+                'sadness': None,
+                'dominant_emotion': None,
+                'status_code': 500  # Internal server error
+            }
 
         if response.status_code == 200:
             emotion_scores = response_data['emotionPredictions'][0]['emotion']
@@ -47,8 +60,8 @@ def emotion_detector(text_to_analyze):
                 'dominant_emotion': None,
                 'status_code': response.status_code
             }
-    except Exception as e:
-        # Handle exceptions such as network errors
+    except requests.exceptions.RequestException as e:
+        # Handle network-related exceptions (e.g., connection errors, timeouts)
         return {
             'anger': None,
             'disgust': None,
